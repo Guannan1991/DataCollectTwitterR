@@ -11,3 +11,7 @@ tweets <- searchTwitter(" AND #MWC OR Mobile World Congress OR Huawei OR Samsung
 
 tweets.df <-twListToDF(tweets)
 write.csv(tweets.df, "C:/Users/gli/Desktop/Guannan/tweets.csv")# DataCollectTwitterR
+
+##Methods to get Twitter API
+https://www.slickremix.com/docs/how-to-get-api-keys-and-tokens-for-twitter/ 
+https://opensource.com/article/17/6/collecting-and-mapping-twitter-data-using-r
