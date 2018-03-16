@@ -1,4 +1,4 @@
-install.packages("twitteR") #installs TwitteR library (twitteR) #loads TwitteR
+install.packages("twitteR") #installs TwitteR
 library(twitteR)
 
 api_key <- "CBxyH*******5f2S81hyNJp" #in the quotes, put your API key 
