@@ -3,10 +3,10 @@
 install.packages("twitteR") #installs TwitteR 
 library(twitteR)
 
-api_key <- "LySW7vYImYnlGqeuhsc3Ll1Kr" #API key 
-api_secret <- "LoDPQ1rirBrCtGAW8ox4WmHDcPjr7mfIzgGvhdnpC8hAQY2VsU" #API secret token
-token <- "929816555646603268-V30pExKqr3gmgzhwbS0JcmQE0olxloU" #token 
-token_secret <- "aM5iQwxN7Cxhoxr4xaOzU5Dko9qxQSpKLjBHtttK3qPVQ" #token secret
+api_key <- "LySW7v*******3Ll1Kr" #API key 
+api_secret <- "LoDPQ*********npC8hAQY2VsU" #API secret token
+token <- "929816555********S0JcmQE0olxloU" #token 
+token_secret <- "aM5iQwxN7Cx*********tK3qPVQ" #token secret
 
 setup_twitter_oauth(api_key, api_secret, token, token_secret)
 
