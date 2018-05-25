@@ -1,17 +1,69 @@
-install.packages("twitteR") #installs TwitteR
+##Investigate Twitter and produce a word cloud##
+
+install.packages("twitteR") #installs TwitteR 
 library(twitteR)
 
-api_key <- "CBxyH*******5f2S81hyNJp" #in the quotes, put your API key 
-api_secret <- "LhpgpQCvPEohI*******NsCbHKYvve6368jzsMY4Yx" #in the quotes, put your API secret token
-token <- "929816555646603268*******S0JcmQE0olxloU" #in the quotes, put your token 
-token_secret <- "aM5iQwxN7Cx*******o9qxQSpKLjBHtttK3qPVQ" #in the quotes, put your token secret
+api_key <- "LySW7vYImYnlGqeuhsc3Ll1Kr" #API key 
+api_secret <- "LoDPQ1rirBrCtGAW8ox4WmHDcPjr7mfIzgGvhdnpC8hAQY2VsU" #API secret token
+token <- "929816555646603268-V30pExKqr3gmgzhwbS0JcmQE0olxloU" #token 
+token_secret <- "aM5iQwxN7Cxhoxr4xaOzU5Dko9qxQSpKLjBHtttK3qPVQ" #token secret
 
 setup_twitter_oauth(api_key, api_secret, token, token_secret)
-tweets <- searchTwitter(" AND #MWC OR Mobile World Congress OR Huawei OR Samsung OR LG", n = 200, lang = "en")
+
+tweets <- searchTwitter("flagship OR phone OR htc OR huawei OR vivo OR xiaomi", n = 200, lang = "en") #Search Engine
 
 tweets.df <-twListToDF(tweets)
-write.csv(tweets.df, "C:/Users/gli/Desktop/Guannan/tweets.csv")# DataCollectTwitterR
+write.csv(tweets.df, "C:/Users/gli/Desktop/Guannan/tweets3.csv")     
 
-##Methods to get Twitter API
-##https://www.slickremix.com/docs/how-to-get-api-keys-and-tokens-for-twitter/ 
-##https://opensource.com/article/17/6/collecting-and-mapping-twitter-data-using-r
+##Calculate Words Frequencey & create a word cloud
+##Reference: http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
+
+# Install
+install.packages("tm")  # for text mining
+install.packages("SnowballC") # for text stemming
+install.packages("wordcloud") # word-cloud generator 
+install.packages("RColorBrewer") # color palettes
+# Load
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+
+TextSource <- read.csv(file="C:/Users/gli/Desktop/Guannan/tweets3.csv", header=TRUE, sep=",")
+Text <- TextSource[ , "text"]
+docs <- Corpus(VectorSource(Text))
+inspect(docs)
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+docs <- tm_map(docs, toSpace, "/")
+docs <- tm_map(docs, toSpace, "@")
+docs <- tm_map(docs, toSpace, "\\|")
+
+#Clean data
+# Convert the text to lower case
+docs <- tm_map(docs, content_transformer(tolower))
+# Remove numbers
+docs <- tm_map(docs, removeNumbers)
+# Remove english common stopwords
+docs <- tm_map(docs, removeWords, stopwords("english"))
+# Remove your own stop word
+# specify your stopwords as a character vector
+docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
+# Remove punctuations
+docs <- tm_map(docs, removePunctuation)
+# Eliminate extra white spaces
+docs <- tm_map(docs, stripWhitespace)
+# Text stemming
+# docs <- tm_map(docs, stemDocument)
+
+#Build a term-document matrix
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+
+#Generate the Word cloud
+set.seed(1234)
+wordcloud(words = d$word, freq = d$freq, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+head(d, 10)
